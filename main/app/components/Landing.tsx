@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -501,8 +502,8 @@ export default function Landing() {
                 AI-powered job matching for candidates and recruiters. Built with ❣️
               </p>
               <div className="flex gap-3">
-                {[{ icon: Twitter, href: "#" }, { icon: Linkedin, href: "#" }, { icon: Github, href: "#" }].map(({ icon: Icon, href }) => (
-                  <a key={href} href={href} className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                {[{ icon: Twitter,  }, { icon: Linkedin,  }, { icon: Github,  }].map(({ icon: Icon, }) => (
+                  <a  className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
                     <Icon size={14} />
                   </a>
                 ))}
@@ -515,7 +516,7 @@ export default function Landing() {
                 <ul className="space-y-2.5">
                   {links.map((link) => (
                     <li key={link}>
-                      <a href="#" className="text-slate-500 text-sm hover:text-slate-300 transition-colors" style={{ fontWeight: 300 }}>{link}</a>
+                      <a  className="text-slate-500 text-sm hover:text-slate-300 transition-colors" style={{ fontWeight: 300 }}>{link}</a>
                     </li>
                   ))}
                 </ul>
@@ -526,9 +527,9 @@ export default function Landing() {
           <div className="border-t border-white/8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600">
             <p>© 2026 Jobbr. All rights reserved.</p>
             <div className="flex items-center gap-6">
-              <a href="#" className="hover:text-slate-400 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-slate-400 transition-colors">Terms</a>
-              <a href="#" className="hover:text-slate-400 transition-colors">Cookies</a>
+              <a  className="hover:text-slate-400 transition-colors">Privacy</a>
+              <a  className="hover:text-slate-400 transition-colors">Terms</a>
+              <a  className="hover:text-slate-400 transition-colors">Cookies</a>
             </div>
             <a href="mailto:hello@jobbr.dev" className="flex items-center gap-1.5 hover:text-slate-400 transition-colors">
               <Mail size={11} /> hello@jobbr.dev
