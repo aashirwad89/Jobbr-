@@ -44,7 +44,7 @@ user.refreshToken = refreshToken;
 user.lastLogin = new Date();
 await user.save();
 
-setRefrreshToken(res, refreshToken);
+setRefreshToken(res, refreshToken);
 
 return res.status(200).json({
     success:true,
