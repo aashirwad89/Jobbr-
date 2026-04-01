@@ -25,7 +25,7 @@ const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
   { icon: Brain, label: 'Roadmaps', href: '/job-rec' },
   { icon: Bell, label: 'Alerts', href: '/job-alert' },
-  { icon: FileText, label: 'Resume', href: '/resume-builder' },
+  { icon: FileText, label: 'Create Resume', href: '/resume-builder' },
   { icon: Zap, label: 'AI Analyser', href: '/resume-ai' },
   { icon: Code2, label: 'Coding Hub', href: '/coding-hub' },
   { icon: Bot, label: 'AI Assistant', href: '/chatbot' },
