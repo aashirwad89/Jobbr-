@@ -1,118 +1,91 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/jsx-key */
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  Briefcase,
-  Search,
-  Users,
-  TrendingUp,
-  CheckCircle,
-  ArrowRight,
-  Star,
-  MapPin,
-  Building2,
-  Zap,
-  Shield,
-  Globe,
-  ChevronRight,
-  Twitter,
-  Linkedin,
-  Github,
-  Mail,
-  Phone,
-  Sparkles,
+  Briefcase, Search, Users, TrendingUp, CheckCircle, ArrowRight,
+  Star, MapPin, Building2, Zap, Shield, Globe, ChevronRight,
+  Twitter, Linkedin, Github, Mail, Sparkles, UserPlus, FileText,
+  Brain, BarChart3, Map, BookOpen, Bell, LayoutDashboard, Lock,
+  Play, Trophy, Target, Flame, ChevronDown,
 } from "lucide-react";
 
-const stats = [
+const STEPS = [
+  {
+    num: 1, icon: UserPlus, color: "#6366f1", bg: "rgba(99,102,241,0.12)", border: "rgba(99,102,241,0.3)",
+    title: "Sign Up / Login", subtitle: "Create your free account in 30 seconds",
+    xp: "+50 XP", badge: "Explorer", locked: false,
+    desc: "Join 2M+ professionals. Google login supported.",
+  },
+  {
+    num: 2, icon: FileText, color: "#8b5cf6", bg: "rgba(139,92,246,0.12)", border: "rgba(139,92,246,0.3)",
+    title: "Upload Resume", subtitle: "PDF / DOCX — or skip & build fresh",
+    xp: "+100 XP", badge: "Uploader", locked: false,
+    desc: "Already have a resume? Upload it. Building fresh? We guide you step by step.",
+  },
+  {
+    num: 3, icon: Brain, color: "#06b6d4", bg: "rgba(6,182,212,0.12)", border: "rgba(6,182,212,0.3)",
+    title: "AI Analyses It", subtitle: "Deep scan in under 10 seconds",
+    xp: "+150 XP", badge: "Analyst", locked: false,
+    desc: "Our AI reads your resume, scores your skills, and finds gaps before recruiters do.",
+  },
+  {
+    num: 4, icon: BarChart3, color: "#10b981", bg: "rgba(16,185,129,0.12)", border: "rgba(16,185,129,0.3)",
+    title: "Get Your Report", subtitle: "Score, strengths & gaps — crystal clear",
+    xp: "+200 XP", badge: "Self-Aware", locked: true,
+    desc: "Visual report: resume score, keyword density, ATS compatibility, and top skill gaps.",
+  },
+  {
+    num: 5, icon: Map, color: "#f59e0b", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.3)",
+    title: "Pick Your Roadmap", subtitle: "Role-specific path — skip if you know your goal",
+    xp: "+250 XP", badge: "Pathfinder", locked: true,
+    desc: "Frontend? ML? Product? Get a curated skill roadmap tailored to your target role.",
+  },
+  {
+    num: 6, icon: Target, color: "#ef4444", bg: "rgba(239,68,68,0.12)", border: "rgba(239,68,68,0.3)",
+    title: "Job Recommendations", subtitle: "AI matches you — no random scrolling",
+    xp: "+300 XP", badge: "Matcher", locked: true,
+    desc: "50K+ live jobs. AI shortlists the ones where your resume actually fits.",
+  },
+  {
+    num: 7, icon: Bell, color: "#ec4899", bg: "rgba(236,72,153,0.12)", border: "rgba(236,72,153,0.3)",
+    title: "Set Job Alerts", subtitle: "Drop your email, never miss a role",
+    xp: "+100 XP", badge: "Vigilant", locked: true,
+    desc: "Daily digest of new jobs matching your profile. Unsubscribe anytime.",
+  },
+  {
+    num: 8, icon: LayoutDashboard, color: "#6366f1", bg: "rgba(99,102,241,0.12)", border: "rgba(99,102,241,0.3)",
+    title: "Dashboard Unlocked", subtitle: "Track everything in one place",
+    xp: "+500 XP", badge: "Job Ready ★", locked: true,
+    desc: "Application tracker, AI chat, resume builder, and analytics — all live.",
+  },
+];
+
+const STATS = [
   { value: "50K+", label: "Active Jobs" },
   { value: "12K+", label: "Companies" },
   { value: "2M+", label: "Candidates" },
   { value: "94%", label: "Placement Rate" },
 ];
 
-const features = [
-  {
-    icon: Zap,
-    title: "AI-Powered Matching",
-    desc: "Our engine scores your resume against every listing — so you only see roles where you actually fit.",
-  },
-  {
-    icon: Shield,
-    title: "Verified Employers",
-    desc: "Every company is vetted before posting. No ghost listings, no scams — just real opportunities.",
-  },
-  {
-    icon: TrendingUp,
-    title: "ATS for Recruiters",
-    desc: "A full applicant tracking pipeline — from sourcing to offer — built into the dashboard.",
-  },
-  {
-    icon: Globe,
-    title: "Remote-First",
-    desc: "Filter by remote, hybrid, or onsite. Your next role can be anywhere in the world.",
-  },
+const TESTIMONIALS = [
+  { name: "Priya Sharma", role: "Frontend Dev at Razorpay", text: "Got three interview calls in the first week. The AI matching actually works.", initials: "PS", xp: "1450 XP" },
+  { name: "Arjun Mehta", role: "Recruiter at CRED", text: "The ATS pipeline saved our team 10 hours a week. Everything in one place.", initials: "AM", xp: "2100 XP" },
+  { name: "Neha Joshi", role: "PM at Groww", text: "Switched from LinkedIn to Jobbr and landed my job in 3 weeks.", initials: "NJ", xp: "980 XP" },
 ];
 
-const jobs = [
-  {
-    role: "Senior Frontend Engineer",
-    company: "Stripe",
-    location: "Remote",
-    salary: "₹28–42L",
-    type: "Full-time",
-    tag: "New",
-  },
-  {
-    role: "Product Designer",
-    company: "Razorpay",
-    location: "Bangalore",
-    salary: "₹20–32L",
-    type: "Full-time",
-    tag: "Hot",
-  },
-  {
-    role: "Backend Engineer — Node.js",
-    company: "CRED",
-    location: "Remote",
-    salary: "₹24–38L",
-    type: "Full-time",
-    tag: "Featured",
-  },
-];
-
-const testimonials = [
-  {
-    name: "Priya Sharma",
-    role: "Frontend Dev at Razorpay",
-    text: "Got three interview calls in the first week. The AI matching actually works — it didn't waste my time on roles I was overqualified for.",
-    initials: "PS",
-  },
-  {
-    name: "Arjun Mehta",
-    role: "Recruiter at CRED",
-    text: "The ATS pipeline saved our team 10 hours a week. Ranked applicants, drag-and-drop status — everything in one place.",
-    initials: "AM",
-  },
-  {
-    name: "Neha Joshi",
-    role: "PM at Groww",
-    text: "Switched from LinkedIn to Jobbr and landed my job in 3 weeks. The job alerts feature is genuinely useful.",
-    initials: "NJ",
-  },
-];
-
-const footerLinks = {
-  Product: ["Job Search", "For Recruiters", "AI Matching", "Job Alerts", "Pricing"],
-  Company: ["About", "Blog", "Careers", "Press", "Contact"],
-  Resources: ["Documentation", "API", "Status", "Privacy Policy", "Terms"],
-};
+const DISPLAY = `'Syne', system-ui, sans-serif`;
+const BODY = `'DM Sans', system-ui, sans-serif`;
 
 export default function Landing() {
   const [scrolled, setScrolled] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [activeStep, setActiveStep] = useState<number | null>(null);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [totalXP, setTotalXP] = useState(0);
+  const [showXPPop, setShowXPPop] = useState<string | null>(null);
+  const stepsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -120,557 +93,407 @@ export default function Landing() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    const handleMouseMove = (e: { clientX: any; clientY: any; }) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  const handleStepClick = (stepNum: number) => {
+    setActiveStep(activeStep === stepNum ? null : stepNum);
+    if (!completedSteps.includes(stepNum)) {
+      const step = STEPS[stepNum - 1];
+      const xpVal = parseInt(step.xp);
+      setCompletedSteps(p => [...p, stepNum]);
+      setTotalXP(p => p + xpVal);
+      setShowXPPop(step.xp);
+      setTimeout(() => setShowXPPop(null), 1800);
+    }
+  };
+
+  const progressPct = Math.round((completedSteps.length / STEPS.length) * 100);
+
+  const css = `
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: '${BODY}'; background: #080810; color: #e8e8f0; overflow-x: hidden; }
+
+    .nav-glass { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); background: rgba(8,8,16,0.85); border-bottom: 1px solid rgba(99,102,241,0.12); }
+
+    .glow-blob { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; }
+
+    .grid-bg {
+      background-image: linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .step-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .step-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(99,102,241,0) 0%, rgba(99,102,241,0.06) 100%);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .step-card:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(99,102,241,0.12); }
+    .step-card:hover::before { opacity: 1; }
+    .step-card.active { border-color: rgba(99,102,241,0.5); box-shadow: 0 0 0 1px rgba(99,102,241,0.2), 0 16px 48px rgba(99,102,241,0.15); }
+    .step-card.done { border-color: rgba(16,185,129,0.35); background: rgba(16,185,129,0.04); }
+
+    .connector-line {
+      position: absolute; left: 31px; top: 100%; width: 2px; height: 24px;
+      background: linear-gradient(to bottom, rgba(99,102,241,0.4), rgba(99,102,241,0.1));
+      z-index: 0;
+    }
+
+    .xp-badge { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 600; font-family: 'Courier New', monospace; }
+
+    .rank-badge { border-radius: 999px; padding: 3px 12px; font-size: 11px; font-weight: 600; font-family: 'Courier New', monospace; letter-spacing: 0.06em; }
+
+    .progress-bar-bg { background: rgba(255,255,255,0.07); border-radius: 999px; overflow: hidden; }
+    .progress-bar-fill { background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899); border-radius: 999px; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+
+    .xp-popup {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: rgba(245,158,11,0.9); color: #0f172a; font-family: 'Syne',sans-serif;
+      font-weight: 800; font-size: 28px; padding: 12px 32px; border-radius: 16px;
+      z-index: 999; animation: xpPop 1.8s ease forwards; pointer-events: none;
+    }
+    @keyframes xpPop {
+      0% { opacity: 0; transform: translate(-50%, -30%); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+      70% { opacity: 1; transform: translate(-50%, -60%); }
+      100% { opacity: 0; transform: translate(-50%, -80%); }
+    }
+
+    .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff; font-family: 'Syne',sans-serif; font-weight: 700;
+      border: none; cursor: pointer; transition: all 0.3s ease;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(99,102,241,0.4); filter: brightness(1.1); }
+
+    .btn-outline {
+      background: transparent; color: #a5b4fc;
+      border: 1px solid rgba(99,102,241,0.3); cursor: pointer; transition: all 0.3s ease;
+      font-family: 'DM Sans',sans-serif; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline:hover { border-color: rgba(99,102,241,0.6); background: rgba(99,102,241,0.08); }
+
+    .testimonial-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; transition: all 0.3s ease; }
+    .testimonial-card:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.25); box-shadow: 0 16px 48px rgba(99,102,241,0.1); }
+
+    .job-tag { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); color: #a5b4fc; border-radius: 8px; padding: 4px 12px; font-size: 12px; font-family: 'Courier New',monospace; transition: all 0.2s; cursor: pointer; }
+    .job-tag:hover { background: rgba(99,102,241,0.2); border-color: rgba(99,102,241,0.4); transform: scale(1.05); }
+
+    .footer-dark { background: #04040a; border-top: 1px solid rgba(99,102,241,0.1); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+    .fade-up { animation: fadeUp 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .d1 { animation-delay: 0.1s; } .d2 { animation-delay: 0.22s; } .d3 { animation-delay: 0.34s; }
+
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+    .float { animation: float 4s ease-in-out infinite; }
+
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+    .pulse { animation: pulse 2s ease-in-out infinite; }
+
+    .hero-badge { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); color: #a5b4fc; border-radius: 999px; display:inline-flex; align-items:center; gap:6px; padding: 6px 16px; font-size:12px; }
+
+    .lock-overlay { position:absolute; inset:0; background:rgba(8,8,16,0.5); border-radius:20px; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(1px); }
+
+    .step-num-circle {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne',sans-serif; font-weight: 800; font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .section-label { font-family: 'Courier New',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:#6366f1; margin-bottom:8px; display:block; }
+
+    input { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:10px 14px; color:#e2e8f0; font-size:14px; font-family:'DM Sans',sans-serif; outline:none; transition:border-color 0.2s; }
+    input:focus { border-color:rgba(99,102,241,0.5); }
+    input::placeholder { color:#4b5563; }
+
+    .nav-link { color: #64748b; font-size:14px; text-decoration:none; transition:color 0.2s; position:relative; }
+    .nav-link:hover { color:#e2e8f0; }
+    .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:1px; background:#6366f1; transition:width 0.3s; }
+    .nav-link:hover::after { width:100%; }
+
+    .milestone-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+    @keyframes shimmer { 0% { background-position:-400px 0; } 100% { background-position:400px 0; } }
+    .shimmer { background:linear-gradient(90deg, rgba(99,102,241,0.05) 0%, rgba(99,102,241,0.15) 50%, rgba(99,102,241,0.05) 100%); background-size:400px; animation:shimmer 2.5s infinite; }
+  `;
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc] text-[#0f172a] font-sans overflow-x-hidden">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+    <div style={{ minHeight: "100vh", background: "#080810", color: "#e8e8f0", fontFamily: BODY, overflowX: "hidden" }}>
+      <style>{css}</style>
 
-        * { box-sizing: border-box; }
-        body { font-family: 'DM Sans', sans-serif; background: #f8f9fc; }
-
-        .glow-orb {
-          position: absolute; border-radius: 50%; filter: blur(100px); pointer-events: none;
-        }
-
-        .accent { color: #1e3a8a; }
-        .accent-mid { color: #2563eb; }
-        .accent-bg { background: #1e3a8a; }
-        .accent-bg-mid { background: #2563eb; }
-
-        .nav-glass {
-          background: rgba(248,249,252,0.8);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          box-shadow: 0 1px 2px rgba(30,58,138,0.05);
-        }
-
-        .card-white {
-          background: #ffffff;
-          border: 1px solid rgba(30,58,138,0.08);
-          position: relative;
-          overflow: hidden;
-        }
-        .card-white::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(37,99,235,0) 0%, rgba(37,99,235,0.05) 100%);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-        .card-white:hover {
-          border-color: rgba(37,99,235,0.25);
-          box-shadow: 0 8px 24px rgba(37,99,235,0.1);
-          transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-        }
-        .card-white:hover::before { opacity: 1; }
-
-        .card-tinted {
-          background: rgba(239,246,255,0.7);
-          border: 1px solid rgba(30,58,138,0.08);
-        }
-        .card-tinted:hover {
-          border-color: rgba(37,99,235,0.2);
-          transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-          background: #1e3a8a;
-          color: #ffffff;
-          font-family: 'Syne', sans-serif;
-          font-weight: 600;
-          letter-spacing: 0.01em;
-          transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-          position: relative;
-          overflow: hidden;
-        }
-        .btn-primary::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-          transform: translateX(-100%);
-        }
-        .btn-primary:hover {
-          background: #1d4ed8;
-          transform: translateY(-2px);
-          box-shadow: 0 12px 24px rgba(30,58,138,0.3);
-        }
-        .btn-primary:active {
-          transform: translateY(0);
-        }
-
-        .btn-outline {
-          border: 1px solid rgba(30,58,138,0.2);
-          color: #1e3a8a;
-          transition: all 0.3s ease;
-          position: relative;
-        }
-        .btn-outline:hover {
-          border-color: #2563eb;
-          background: rgba(239,246,255,0.6);
-          transform: translateY(-1px);
-        }
-
-        .tag-new { 
-          background: rgba(219,234,254,0.8); 
-          color: #1d4ed8; 
-          border: 1px solid rgba(37,99,235,0.2); 
-          animation: tag-pulse 2s ease-in-out infinite;
-        }
-        .tag-hot { 
-          background: rgba(254,226,226,0.8); 
-          color: #dc2626; 
-          border: 1px solid rgba(220,38,38,0.2); 
-          animation: tag-pulse 2s ease-in-out infinite;
-        }
-        .tag-feat { 
-          background: rgba(237,233,254,0.8); 
-          color: #7c3aed; 
-          border: 1px solid rgba(124,58,237,0.2); 
-        }
-
-        @keyframes tag-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.1); }
-          50% { box-shadow: 0 0 0 6px rgba(37,99,235,0); }
-        }
-
-        .stat-num {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          color: #1e3a8a;
-        }
-
-        .divider { border-color: rgba(30,58,138,0.08); }
-
-        @keyframes fade-up {
-          from { opacity: 0; transform: translateY(24px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-up { animation: fade-up 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.22s; }
-        .delay-3 { animation-delay: 0.34s; }
-        .delay-4 { animation-delay: 0.46s; }
-
-        @keyframes float-up {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-        }
-        .animate-float { animation: float-up 3s ease-in-out infinite; }
-
-        @keyframes shimmer {
-          0% { background-position: -1000px 0; }
-          100% { background-position: 1000px 0; }
-        }
-        .shimmer-loading {
-          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-          background-size: 1000px 100%;
-          animation: shimmer 2s infinite;
-        }
-
-        .search-bar {
-          background: #ffffff;
-          border: 1px solid rgba(30,58,138,0.12);
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 16px rgba(30,58,138,0.05);
-        }
-        .search-bar:focus-within { 
-          border-color: #2563eb;
-          box-shadow: 0 12px 32px rgba(37,99,235,0.15);
-          transform: translateY(-2px);
-        }
-
-        input::placeholder { color: #94a3b8; }
-        input { background: transparent; outline: none; color: #0f172a; }
-
-        .hero-badge {
-          background: rgba(239,246,255,0.9);
-          border: 1px solid rgba(37,99,235,0.15);
-          color: #1d4ed8;
-          animation: badge-glow 2s ease-in-out infinite;
-        }
-
-        @keyframes badge-glow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.2); }
-          50% { box-shadow: 0 0 0 8px rgba(37,99,235,0); }
-        }
-
-        .stats-section {
-          background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
-          position: relative;
-          overflow: hidden;
-        }
-        .stats-section::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: 
-            radial-gradient(circle at 20% 50%, rgba(37,99,235,0.2) 0%, transparent 50%),
-            radial-gradient(circle at 80% 50%, rgba(30,58,138,0.2) 0%, transparent 50%);
-          pointer-events: none;
-        }
-
-        .feature-icon-wrap {
-          background: rgba(219,234,254,0.6);
-          border: 1px solid rgba(37,99,235,0.15);
-          transition: all 0.3s ease;
-        }
-        .card-white:hover .feature-icon-wrap {
-          background: rgba(37,99,235,0.15);
-          border-color: rgba(37,99,235,0.3);
-          transform: scale(1.1) rotate(5deg);
-        }
-
-        .recruiter-section {
-          background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
-          position: relative;
-          overflow: hidden;
-        }
-        .recruiter-section::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: 
-            radial-gradient(circle at 100% 0%, rgba(37,99,235,0.3) 0%, transparent 50%),
-            radial-gradient(circle at 0% 100%, rgba(30,58,138,0.3) 0%, transparent 50%);
-          pointer-events: none;
-        }
-
-        .footer-dark {
-          background: linear-gradient(180deg, #0f172a 0%, #0a0f1f 100%);
-          position: relative;
-        }
-
-        footer a:hover { 
-          color: #93c5fd; 
-          transition: color 0.2s ease;
-        }
-
-        .job-row {
-          transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-          position: relative;
-        }
-        .job-row::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(90deg, rgba(37,99,235,0) 0%, rgba(37,99,235,0.05) 50%, rgba(37,99,235,0) 100%);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          pointer-events: none;
-        }
-        .job-row:hover {
-          transform: translateX(4px);
-          background: rgba(37,99,235,0.02);
-        }
-        .job-row:hover::before { opacity: 1; }
-
-        .apply-btn { 
-          opacity: 0; 
-          transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-          transform: translateX(-4px);
-        }
-        .job-row:hover .apply-btn { 
-          opacity: 1; 
-          transform: translateX(0);
-        }
-
-        .popular-tag {
-          background: rgba(219,234,254,0.6);
-          color: #1d4ed8;
-          border: 1px solid rgba(37,99,235,0.12);
-          transition: all 0.2s ease;
-          cursor: pointer;
-        }
-        .popular-tag:hover {
-          background: rgba(37,99,235,0.15);
-          border-color: rgba(37,99,235,0.3);
-          transform: scale(1.05);
-        }
-
-        .testimonial-card {
-          transition: all 0.3s ease;
-        }
-        .testimonial-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 32px rgba(37,99,235,0.15);
-        }
-
-        .scroll-reveal {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        .scroll-reveal.in-view {
-          animation: fade-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        @keyframes pulse-subtle {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.7; }
-        }
-        .pulse-icon { animation: pulse-subtle 2s ease-in-out infinite; }
-
-        .icon-float {
-          animation: float-up 3s ease-in-out infinite;
-        }
-
-        .star-rating {
-          display: flex;
-          gap: 2px;
-        }
-        .star-rating svg {
-          transition: all 0.2s ease;
-          transform-origin: center;
-        }
-
-        .feature-grid:hover .card-white:not(:hover) {
-          opacity: 0.6;
-        }
-        .feature-grid .card-white {
-          transition: opacity 0.3s ease;
-        }
-      `}</style>
+      {showXPPop && <div className="xp-popup">{showXPPop} earned!</div>}
 
       {/* ── Navbar ── */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "nav-glass border-b divider py-3" : "py-5"}`}>
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg accent-bg flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-              <Briefcase size={16} color="#ffffff" strokeWidth={2.5} />
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "nav-glass" : ""}`} style={{ padding: scrolled ? "12px 0" : "20px 0" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <div style={{ width: 34, height: 34, borderRadius: 10, background: "linear-gradient(135deg,#6366f1,#8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Briefcase size={16} color="#fff" strokeWidth={2.5} />
             </div>
-            <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "#0f172a" }} className="transition-all duration-300 group-hover:text-[#2563eb]">Jobbr</span>
+            <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 18, color: "#e8e8f0" }}>Jobbr</span>
           </Link>
-          <div className="hidden md:flex items-center gap-8 text-sm text-slate-500">
-            <Link href="#features" className="relative hover:text-slate-900 transition-colors group">
-              Features
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#2563eb] to-transparent group-hover:w-full transition-all duration-300" />
-            </Link>
-            <Link href="#jobs" className="relative hover:text-slate-900 transition-colors group">
-              Browse Jobs
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#2563eb] to-transparent group-hover:w-full transition-all duration-300" />
-            </Link>
-            <Link href="#recruiters" className="relative hover:text-slate-900 transition-colors group">
-              For Recruiters
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#2563eb] to-transparent group-hover:w-full transition-all duration-300" />
-            </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
+            <a href="#journey" className="nav-link">Journey</a>
+            <a href="#jobs" className="nav-link">Jobs</a>
+            <a href="#testimonials" className="nav-link">Stories</a>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="btn-outline text-sm px-4 py-2 rounded-lg font-medium">Sign in</Link>
-            <Link href="/login" className="btn-primary text-sm px-4 py-2 rounded-lg hidden md:block">Get started</Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <Link href="/login"><button className="btn-outline" style={{ padding: "8px 18px", borderRadius: 10, fontSize: 14 }}>Sign in</button></Link>
+            <Link href="/login"><button className="btn-primary" style={{ padding: "9px 20px", borderRadius: 10, fontSize: 14 }}>Get started</button></Link>
           </div>
         </div>
       </nav>
 
       {/* ── Hero ── */}
-      <section className="relative min-h-screen flex items-center justify-center pt-24 pb-20 px-6 overflow-hidden">
-        <div className="glow-orb w-[700px] h-[500px] bg-blue-200/60 top-0 left-1/2 -translate-x-1/2 -translate-y-1/4 animate-float" />
-        <div className="glow-orb w-[400px] h-[400px] bg-indigo-200/40 top-1/2 right-0 translate-x-1/3" style={{ animationDelay: '0.5s' }} />
+      <section className="grid-bg" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "120px 24px 80px", position: "relative", overflow: "hidden" }}>
+        <div className="glow-blob" style={{ width: 600, height: 400, background: "rgba(99,102,241,0.18)", top: -80, left: "50%", transform: "translateX(-50%)" }} />
+        <div className="glow-blob float" style={{ width: 300, height: 300, background: "rgba(236,72,153,0.1)", bottom: 0, right: -50, animationDelay: "1s" }} />
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full hero-badge text-xs mb-8 animate-fade-up">
-            <Sparkles size={12} className="text-[#2563eb] pulse-icon" />
-            AI-powered job matching — now live
-            <ChevronRight size={12} style={{ color: "#2563eb" }} />
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
+          <div className="hero-badge fade-up" style={{ marginBottom: 24 }}>
+            <Sparkles size={12} className="pulse" />
+            <span>8 steps. 1 goal. Your dream job.</span>
+            <ChevronRight size={12} />
           </div>
 
-          <h1
-            className="text-5xl md:text-7xl leading-[1.05] mb-6 animate-fade-up delay-1"
-            style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, color: "#0f172a" }}
-          >
-            Find work that
-            <br />
-            <span style={{ color: "#1e3a8a", position: 'relative', display: 'inline-block' }}>
-              actually fits.
-              <span className="absolute bottom-0 left-0 w-0 h-1.5 bg-gradient-to-r from-[#2563eb] to-[#1e3a8a] animate-fade-up delay-2" style={{ width: 'auto', animation: 'none' }} />
+          <h1 className="fade-up d1" style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(44px,7vw,80px)", lineHeight: 1.05, marginBottom: 24, letterSpacing: "-0.03em" }}>
+            Go from{" "}
+            <span style={{ color: "#6366f1" }}>resume</span>
+            <br />to{" "}
+            <span style={{ background: "linear-gradient(90deg,#6366f1,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              job offer
             </span>
+            .
           </h1>
 
-          <p className="text-slate-500 text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-10 animate-fade-up delay-2" style={{ fontWeight: 300 }}>
-            Jobbr matches your resume to the right roles using AI — so you spend less time applying and more time interviewing.
+          <p className="fade-up d2" style={{ fontSize: 18, color: "#94a3b8", lineHeight: 1.7, maxWidth: 500, margin: "0 auto 40px", fontWeight: 300 }}>
+            Jobbr turns job hunting into a guided quest. Upload your resume, let AI do the heavy lifting, and unlock your next role — step by step.
           </p>
 
-          {/* Search bar */}
-          <div className="search-bar rounded-2xl p-2 flex flex-col md:flex-row gap-2 max-w-2xl mx-auto mb-6 animate-fade-up delay-3">
-            <div className="flex items-center gap-3 flex-1 px-3 py-2">
-              <Search size={16} className="text-slate-400 flex-shrink-0" />
-              <input type="text" placeholder="Job title, skill, or company" className="flex-1 text-sm" />
-            </div>
-            <div className="hidden md:block w-px bg-slate-200 my-1" />
-            <div className="flex items-center gap-3 flex-1 px-3 py-2">
-              <MapPin size={16} className="text-slate-400 flex-shrink-0" />
-              <input type="text" placeholder="Location or Remote" className="flex-1 text-sm" />
-            </div>
-            <Link href="/login" className="btn-primary px-6 py-3 rounded-xl text-sm flex items-center gap-2 justify-center group">
-              <span>Search jobs</span>
-              <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+          <div className="fade-up d3" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, flexWrap: "wrap" }}>
+            <Link href="/login">
+              <button className="btn-primary" style={{ padding: "14px 32px", borderRadius: 14, fontSize: 16 }}>
+                <Play size={16} /> Start your journey
+              </button>
             </Link>
+            <a href="#journey">
+              <button className="btn-outline" style={{ padding: "14px 24px", borderRadius: 14, fontSize: 15 }}>
+                See how it works <ChevronDown size={15} />
+              </button>
+            </a>
           </div>
 
-          <p className="text-slate-400 text-xs animate-fade-up delay-4">
-            Popular:{" "}
-            {["React Developer", "Product Manager", "Data Scientist", "DevOps Engineer"].map((t, i) => (
-              <span key={t}>
-                <span className="popular-tag text-xs px-2 py-0.5 rounded-md mx-0.5">{t}</span>
-              </span>
-            ))}
-          </p>
+          {/* XP teaser bar */}
+          <div className="fade-up" style={{ marginTop: 56, display: "inline-flex", alignItems: "center", gap: 20, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "16px 28px" }}>
+            <div style={{ textAlign: "left" }}>
+              <p style={{ fontFamily: "Courier New", fontSize: 10, color: "#6b7280", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 4 }}>Your progress</p>
+              <div className="progress-bar-bg" style={{ width: 180, height: 6 }}>
+                <div className="progress-bar-fill" style={{ width: `${progressPct}%`, height: "100%" }} />
+              </div>
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <p style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, color: "#fbbf24" }}>{totalXP}</p>
+              <p style={{ fontFamily: "Courier New", fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em" }}>XP earned</p>
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <p style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 15, color: "#a5b4fc" }}>{completedSteps.length}/8</p>
+              <p style={{ fontFamily: "Courier New", fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em" }}>Steps done</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── Stats — dark blue band ── */}
-      <section className="stats-section py-14 px-6 relative">
-        <div className="relative z-10 max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((s, idx) => (
-            <div key={s.label} className="text-center animate-fade-up" style={{ animationDelay: `${idx * 0.1}s` }}>
-              <div className="stat-num text-4xl md:text-5xl mb-1 transition-transform hover:scale-110 duration-300" style={{ color: "#ffffff", fontFamily: "'Syne',sans-serif", fontWeight: 800 }}>{s.value}</div>
-              <div className="text-blue-200 text-sm">{s.label}</div>
+      {/* ── 8-Step Gamified Journey ── */}
+      <section id="journey" style={{ padding: "100px 24px", position: "relative" }}>
+        <div className="glow-blob" style={{ width: 500, height: 300, background: "rgba(139,92,246,0.08)", top: 0, right: -100 }} />
+
+        <div style={{ maxWidth: 780, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 60 }}>
+            <span className="section-label">✦ The Quest</span>
+            <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(28px,4vw,44px)", color: "#e8e8f0", marginBottom: 12, letterSpacing: "-0.02em" }}>
+              8 steps to job-ready
+            </h2>
+            <p style={{ color: "#64748b", fontSize: 15, fontWeight: 300, maxWidth: 440, margin: "0 auto" }}>
+              Click each step to explore it — and earn XP along the way. Locked steps unlock as you progress.
+            </p>
+          </div>
+
+          {/* Interactive XP tracker strip */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 40, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 14, padding: "12px 20px" }}>
+            <Trophy size={16} color="#fbbf24" />
+            <div className="progress-bar-bg" style={{ flex: 1, height: 8 }}>
+              <div className="progress-bar-fill" style={{ width: `${progressPct}%`, height: "100%" }} />
+            </div>
+            <span style={{ fontFamily: "Courier New", fontSize: 12, color: "#fbbf24", minWidth: 80, textAlign: "right" }}>
+              {totalXP} / 1650 XP
+            </span>
+            <span style={{ fontFamily: "Courier New", fontSize: 10, color: "#6b7280" }}>{progressPct}%</span>
+          </div>
+
+          {/* Steps */}
+          <div ref={stepsRef} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {STEPS.map((step, idx) => {
+              const isDone = completedSteps.includes(step.num);
+              const isActive = activeStep === step.num;
+              const IconComp = step.icon;
+
+              return (
+                <div key={step.num} style={{ position: "relative" }}>
+                  <div
+                    className={`step-card ${isActive ? "active" : ""} ${isDone ? "done" : ""}`}
+                    onClick={() => handleStepClick(step.num)}
+                    style={{ padding: "20px 24px" }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                      {/* Step number circle */}
+                      <div className="step-num-circle" style={{ background: isDone ? "rgba(16,185,129,0.2)" : step.bg, border: `1px solid ${isDone ? "rgba(16,185,129,0.4)" : step.border}`, color: isDone ? "#34d399" : step.color }}>
+                        {isDone ? <CheckCircle size={18} /> : step.num}
+                      </div>
+
+                      {/* Icon */}
+                      <div style={{ width: 44, height: 44, borderRadius: 12, background: isDone ? "rgba(16,185,129,0.1)" : step.bg, border: `1px solid ${isDone ? "rgba(16,185,129,0.3)" : step.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <IconComp size={20} color={isDone ? "#34d399" : step.color} />
+                      </div>
+
+                      {/* Text */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3, flexWrap: "wrap" }}>
+                          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 16, color: isDone ? "#34d399" : "#e8e8f0" }}>{step.title}</h3>
+                          <span className="xp-badge">{step.xp}</span>
+                          {isDone && <span style={{ fontFamily: "Courier New", fontSize: 10, color: "#34d399", letterSpacing: "0.1em" }}>✓ DONE</span>}
+                        </div>
+                        <p style={{ fontSize: 13, color: "#6b7280", fontWeight: 300 }}>{step.subtitle}</p>
+                      </div>
+
+                      {/* Badge + chevron */}
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                        <span className="rank-badge" style={{ background: isDone ? "rgba(16,185,129,0.1)" : "rgba(99,102,241,0.1)", border: `1px solid ${isDone ? "rgba(16,185,129,0.3)" : "rgba(99,102,241,0.25)"}`, color: isDone ? "#34d399" : "#a5b4fc" }}>
+                          {step.badge}
+                        </span>
+                        <ChevronDown size={16} color="#4b5563" style={{ transform: isActive ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s" }} />
+                      </div>
+                    </div>
+
+                    {/* Expanded content */}
+                    {isActive && (
+                      <div style={{ marginTop: 20, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                        <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.7, fontWeight: 300, marginBottom: 16 }}>{step.desc}</p>
+                        <div style={{ display: "flex", gap: 10 }}>
+                          <Link href="/login">
+                            <button className="btn-primary" style={{ padding: "9px 20px", borderRadius: 10, fontSize: 13 }}>
+                              {step.num === 1 ? "Sign up free" : "Continue →"}
+                            </button>
+                          </Link>
+                          {step.num === 2 || step.num === 5 ? (
+                            <button className="btn-outline" style={{ padding: "8px 16px", borderRadius: 10, fontSize: 13 }}>Skip this step</button>
+                          ) : null}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Lock overlay for locked steps that aren't done */}
+                    {step.locked && !isDone && completedSteps.length < step.num - 1 && (
+                      <div className="lock-overlay">
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                          <Lock size={18} color="#4b5563" />
+                          <span style={{ fontFamily: "Courier New", fontSize: 11, color: "#4b5563", letterSpacing: "0.1em" }}>Complete step {step.num - 1} to unlock</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Connector */}
+                  {idx < STEPS.length - 1 && (
+                    <div style={{ width: 2, height: 16, background: isDone ? "rgba(16,185,129,0.4)" : "rgba(99,102,241,0.2)", margin: "0 auto", position: "relative", zIndex: 0 }} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Final CTA after steps */}
+          <div style={{ marginTop: 48, textAlign: "center" }}>
+            <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 20, padding: "36px 40px" }}>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>🏆</div>
+              <h3 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, marginBottom: 8 }}>Job Ready badge awaits</h3>
+              <p style={{ fontSize: 14, color: "#64748b", fontWeight: 300, marginBottom: 24 }}>Complete all 8 steps. Earn 1,650 XP. Unlock your dashboard.</p>
+              <Link href="/login">
+                <button className="btn-primary" style={{ padding: "14px 36px", borderRadius: 14, fontSize: 16 }}>
+                  <Flame size={16} /> Begin the quest
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Stats ── */}
+      <section style={{ padding: "60px 24px", background: "linear-gradient(135deg,#0f0f1f,#0a0a18)" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16 }}>
+          {STATS.map((s, i) => (
+            <div key={s.label} className="stat-card" style={{ padding: "28px 20px", textAlign: "center" }}>
+              <p style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 36, color: "#6366f1", marginBottom: 4 }}>{s.value}</p>
+              <p style={{ fontSize: 13, color: "#64748b" }}>{s.label}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── Features ── */}
-      <section id="features" className="relative z-10 py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14 animate-fade-up">
-            <p className="text-xs font-medium tracking-widest uppercase mb-3 transition-all duration-300 hover:text-[#2563eb]" style={{ color: "#2563eb" }}>Why Jobbr</p>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: "2.5rem", color: "#0f172a" }}>
-              Built different.
-            </h2>
+      {/* ── Job tags / browse ── */}
+      <section id="jobs" style={{ padding: "80px 24px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <span className="section-label">✦ Live Roles</span>
+            <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(24px,3.5vw,38px)", letterSpacing: "-0.02em" }}>50,000+ jobs waiting</h2>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 feature-grid">
-            {features.map((f, idx) => (
-              <div key={f.title} className="card-white rounded-2xl p-6 cursor-default animate-fade-up" style={{ animationDelay: `${idx * 0.1}s` }}>
-                <div className="w-10 h-10 rounded-xl feature-icon-wrap flex items-center justify-center mb-5">
-                  <f.icon size={18} style={{ color: "#2563eb" }} />
-                </div>
-                <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 600, fontSize: "0.95rem", color: "#0f172a", marginBottom: "8px" }}>
-                  {f.title}
-                </h3>
-                <p className="text-slate-500 text-sm leading-relaxed" style={{ fontWeight: 300 }}>{f.desc}</p>
-              </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
+            {["React Developer", "Product Manager", "Data Scientist", "DevOps Engineer", "UX Designer", "Backend Engineer", "ML Engineer", "iOS Developer", "Growth Hacker", "Android Dev"].map(tag => (
+              <Link href="/login" key={tag}><span className="job-tag">{tag}</span></Link>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ── Featured Jobs ── */}
-      <section id="jobs" className="relative z-10 py-20 px-6 bg-white/50">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-end justify-between mb-10">
-            <div className="animate-fade-up">
-              <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: "#2563eb" }}>Open roles</p>
-              <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: "2rem", color: "#0f172a" }}>Featured jobs</h2>
-            </div>
-            <Link href="/login" className="text-sm text-slate-400 hover:text-slate-700 flex items-center gap-1 transition-all hover:gap-2 duration-300">
-              View all <ArrowRight size={14} />
-            </Link>
-          </div>
-
-          <div className="space-y-3">
-            {jobs.map((job, idx) => (
-              <div key={job.role} className="card-white rounded-2xl p-5 flex flex-col md:flex-row md:items-center gap-4 cursor-pointer group job-row animate-fade-up" style={{ animationDelay: `${idx * 0.1}s` }}>
-                <div className="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0 transition-all group-hover:bg-blue-100 group-hover:border-blue-300 duration-300">
-                  <Building2 size={18} className="text-slate-400 group-hover:text-blue-600 transition-colors" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <h3 className="font-medium text-sm text-slate-800 group-hover:text-[#2563eb] transition-colors">{job.role}</h3>
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${job.tag === "New" ? "tag-new" : job.tag === "Hot" ? "tag-hot" : "tag-feat"}`}>
-                      {job.tag}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-3 text-xs text-slate-400">
-                    <span>{job.company}</span>
-                    <span className="flex items-center gap-1"><MapPin size={11} /> {job.location}</span>
-                    <span>{job.salary}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-500 border border-slate-200 transition-all group-hover:bg-blue-50 group-hover:border-blue-200">{job.type}</span>
-                  <Link href="/login" className="btn-primary apply-btn text-xs px-4 py-2 rounded-xl flex items-center gap-1">
-                    Apply <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Recruiter CTA — dark blue section ── */}
-      <section id="recruiters" className="recruiter-section py-20 px-6 relative overflow-hidden">
-        <div className="relative z-10 max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-12">
-            <div className="flex-1 animate-fade-up">
-              <div className="flex items-center gap-2 mb-4">
-                <Users size={16} style={{ color: "#93c5fd" }} className="pulse-icon" />
-                <span className="text-xs text-blue-300 tracking-widest uppercase font-medium">For recruiters</span>
-              </div>
-              <h2 className="text-3xl md:text-4xl mb-5 text-white" style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>
-                Hire smarter,<br />not harder.
-              </h2>
-              <ul className="space-y-3 text-sm text-blue-100">
-                {[
-                  "AI-ranked applicants by resume match score",
-                  "Kanban ATS pipeline — applied to offer",
-                  "Automated email notifications on status change",
-                  "Analytics on job performance and funnel",
-                ].map((item, i) => (
-                  <li key={item} className="flex items-start gap-2.5 transition-all hover:translate-x-1 duration-300">
-                    <CheckCircle size={15} style={{ color: "#93c5fd", marginTop: "1px", flexShrink: 0 }} />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex-shrink-0 text-center animate-fade-up delay-1">
-              <Link href="/login" className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold bg-white text-[#1e3a8a] hover:bg-blue-50 transition-all hover:shadow-lg hover:-translate-y-1 duration-300" style={{ fontFamily: "'Syne',sans-serif" }}>
-                Start hiring free <ArrowRight size={16} className="transition-transform hover:translate-x-1" />
-              </Link>
-              <p className="text-blue-300 text-xs mt-3">No credit card required</p>
-            </div>
+          <div style={{ textAlign: "center", marginTop: 32 }}>
+            <Link href="/login"><button className="btn-primary" style={{ padding: "12px 28px", borderRadius: 12, fontSize: 14 }}>Browse all jobs <ArrowRight size={15} /></button></Link>
           </div>
         </div>
       </section>
 
       {/* ── Testimonials ── */}
-      <section className="relative z-10 py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12 animate-fade-up">
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: "2rem", color: "#0f172a" }}>
-              Real people, real results.
-            </h2>
+      <section id="testimonials" style={{ padding: "80px 24px", background: "rgba(255,255,255,0.015)" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <span className="section-label">✦ Player Stories</span>
+            <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(24px,3.5vw,38px)", letterSpacing: "-0.02em" }}>They completed the quest.</h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-4">
-            {testimonials.map((t, idx) => (
-              <div key={t.name} className="card-white rounded-2xl p-6 testimonial-card animate-fade-up" style={{ animationDelay: `${idx * 0.1}s` }}>
-                <div className="flex gap-0.5 mb-4 star-rating">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={13} fill="#f59e0b" style={{ color: "#f59e0b" }} />
-                  ))}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+            {TESTIMONIALS.map(t => (
+              <div key={t.name} className="testimonial-card" style={{ padding: "28px" }}>
+                <div style={{ display: "flex", gap: 4, marginBottom: 16 }}>
+                  {[...Array(5)].map((_, i) => <Star key={i} size={13} fill="#f59e0b" color="#f59e0b" />)}
                 </div>
-                <p className="text-slate-500 text-sm leading-relaxed mb-5" style={{ fontWeight: 300 }}>
-                  &ldquo;{t.text}&rdquo;
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-xs font-medium transition-all hover:scale-110 duration-300" style={{ color: "#1e3a8a" }}>
-                    {t.initials}
-                  </div>
+                <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.7, fontWeight: 300, marginBottom: 20 }}>"{t.text}"</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#a5b4fc" }}>{t.initials}</div>
                   <div>
-                    <p className="text-sm font-medium text-slate-800">{t.name}</p>
-                    <p className="text-xs text-slate-400">{t.role}</p>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: "#e2e8f0" }}>{t.name}</p>
+                    <p style={{ fontSize: 12, color: "#4b5563" }}>{t.role}</p>
                   </div>
+                  <span className="xp-badge" style={{ marginLeft: "auto" }}>{t.xp}</span>
                 </div>
               </div>
             ))}
@@ -679,67 +502,52 @@ export default function Landing() {
       </section>
 
       {/* ── Final CTA ── */}
-      <section className="relative py-24 px-6 text-center overflow-hidden">
-        <div className="glow-orb w-[600px] h-[400px] bg-blue-200/50 left-1/2 -translate-x-1/2 top-0 animate-float" />
-        <div className="relative z-10 max-w-2xl mx-auto">
-          <h2 className="text-4xl md:text-6xl mb-6 animate-fade-up" style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, color: "#0f172a" }}>
-            Your next role<br />
-            <span style={{ color: "#1e3a8a" }}>starts here.</span>
+      <section style={{ padding: "100px 24px", position: "relative", overflow: "hidden" }}>
+        <div className="glow-blob" style={{ width: 600, height: 400, background: "rgba(99,102,241,0.15)", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
+          <span className="section-label">✦ Ready?</span>
+          <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(32px,5vw,60px)", marginBottom: 16, letterSpacing: "-0.03em" }}>
+            Your quest starts{" "}
+            <span style={{ background: "linear-gradient(90deg,#6366f1,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>now.</span>
           </h2>
-          <p className="text-slate-500 mb-10 text-lg animate-fade-up delay-1" style={{ fontWeight: 300 }}>
-            Join 2 million+ candidates and 12,000+ companies already on Jobbr.
+          <p style={{ fontSize: 16, color: "#64748b", fontWeight: 300, marginBottom: 36 }}>
+            Join 2M+ candidates. Free forever for job seekers.
           </p>
-          <Link href="/login" className="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base animate-fade-up delay-2 group">
-            Create free account <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+          <Link href="/login">
+            <button className="btn-primary" style={{ padding: "16px 40px", borderRadius: 16, fontSize: 17 }}>
+              <Flame size={18} /> Start the 8-step quest
+            </button>
           </Link>
+          <p style={{ marginTop: 14, fontSize: 12, color: "#374151" }}>No credit card · Takes 30 seconds</p>
         </div>
       </section>
 
-      {/* ── Footer — dark ── */}
-      <footer className="footer-dark relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6 py-16 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-14">
-            <div className="col-span-2">
-              <Link href="/" className="flex items-center gap-2 mb-4 group">
-                <div className="w-8 h-8 rounded-lg accent-bg flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                  <Briefcase size={16} color="#ffffff" strokeWidth={2.5} />
-                </div>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "#f1f5f9" }} className="transition-all duration-300 group-hover:text-blue-300">Jobbr</span>
-              </Link>
-              <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-6" style={{ fontWeight: 300 }}>
-                AI-powered job matching for candidates and recruiters. Built with ❣️
-              </p>
-              <div className="flex gap-3">
-                {[{ icon: Twitter,  }, { icon: Linkedin,  }, { icon: Github,  }].map(({ icon: Icon, }, i) => (
-                  <a key={i} className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all hover:bg-white/10 hover:scale-110 duration-300">
-                    <Icon size={14} />
-                  </a>
-                ))}
+      {/* ── Footer ── */}
+      <footer className="footer-dark" style={{ padding: "48px 24px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 24, marginBottom: 40 }}>
+            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+              <div style={{ width: 32, height: 32, borderRadius: 9, background: "linear-gradient(135deg,#6366f1,#8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Briefcase size={15} color="#fff" />
               </div>
+              <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 16, color: "#e8e8f0" }}>Jobbr</span>
+            </Link>
+            <div style={{ display: "flex", gap: 12 }}>
+              {[Twitter, Linkedin, Github].map((Icon, i) => (
+                <a key={i} style={{ width: 34, height: 34, borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s" }}>
+                  <Icon size={14} color="#4b5563" />
+                </a>
+              ))}
             </div>
-
-            {Object.entries(footerLinks).map(([section, links]) => (
-              <div key={section}>
-                <h4 className="text-sm mb-4 text-slate-200" style={{ fontFamily: "'Syne',sans-serif", fontWeight: 600 }}>{section}</h4>
-                <ul className="space-y-2.5">
-                  {links.map((link) => (
-                    <li key={link}>
-                      <a className="text-slate-500 text-sm hover:text-slate-300 transition-all hover:translate-x-1 duration-200" style={{ fontWeight: 300 }}>{link}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
           </div>
-
-          <div className="border-t border-white/8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600">
-            <p>© 2026 Jobbr. All rights reserved.</p>
-            <div className="flex items-center gap-6">
-              <a className="hover:text-slate-400 transition-colors">Privacy</a>
-              <a className="hover:text-slate-400 transition-colors">Terms</a>
-              <a className="hover:text-slate-400 transition-colors">Cookies</a>
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+            <p style={{ fontSize: 12, color: "#374151" }}>© 2026 Jobbr. All rights reserved.</p>
+            <div style={{ display: "flex", gap: 24 }}>
+              {["Privacy", "Terms", "Contact"].map(l => (
+                <a key={l} style={{ fontSize: 12, color: "#374151", textDecoration: "none", transition: "color 0.2s", cursor: "pointer" }}>{l}</a>
+              ))}
             </div>
-            <a href="mailto:hello@jobbr.dev" className="flex items-center gap-1.5 hover:text-slate-400 transition-colors">
+            <a href="mailto:hello@jobbr.dev" style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#374151", textDecoration: "none" }}>
               <Mail size={11} /> hello@jobbr.dev
             </a>
           </div>

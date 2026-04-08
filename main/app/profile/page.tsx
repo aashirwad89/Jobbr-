@@ -23,8 +23,17 @@ const AVATARS = [
 
 const EXPERIENCE_OPTIONS = ['Fresher', 'Junior (1-2 yrs)', 'Mid-Level (3-5 yrs)', 'Senior (5-8 yrs)', 'Expert (8+ yrs)']
 
-// ── Mock — replace with useSession / your auth hook ─────────────
-const MOCK_EMAIL = 'rahul.dev@example.com'
+// ── Read email from localStorage (set by login page) ────────────
+function getEmailFromStorage(): string {
+  try {
+    const user = localStorage.getItem('user')
+    if (user) {
+      const parsed = JSON.parse(user)
+      return parsed.email || ''
+    }
+  } catch {}
+  return ''
+}
 
 interface ProfileData {
   name: string
@@ -37,18 +46,21 @@ interface ProfileData {
   avatarId: string
 }
 
-const EMPTY_PROFILE: ProfileData = {
-  name: '',
-  email: MOCK_EMAIL,
-  phone: '',
-  location: '',
-  experience: '',
-  bio: '',
-  skills: [],
-  avatarId: 'm1',
-}
-
 export default function ProfilePage() {
+  // Email dynamically from localStorage
+  const [userEmail] = useState<string>(() => getEmailFromStorage())
+
+  const EMPTY_PROFILE: ProfileData = {
+    name: '',
+    email: userEmail,
+    phone: '',
+    location: '',
+    experience: '',
+    bio: '',
+    skills: [],
+    avatarId: 'm1',
+  }
+
   const [profile, setProfile] = useState<ProfileData>(EMPTY_PROFILE)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState<ProfileData>(EMPTY_PROFILE)
@@ -73,7 +85,7 @@ export default function ProfilePage() {
   }
 
   const deleteProfile = () => {
-    setProfile(EMPTY_PROFILE)
+    setProfile({ ...EMPTY_PROFILE })
     setShowDeleteConfirm(false)
     setEditing(false)
   }
@@ -172,6 +184,13 @@ export default function ProfilePage() {
           </div>
         )}
 
+        {/* ── No email warning ── */}
+        {!userEmail && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 20px', borderRadius: '12px', background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.25)', marginBottom: '24px' }}>
+            <span style={{ color: '#fbbf24', fontSize: '14px' }}>⚠️ Email not found. Please <a href="/auth" style={{ color: '#f59e0b', fontWeight: 600 }}>login again</a> to see your email here.</span>
+          </div>
+        )}
+
         {/* ── Avatar + Basic Info row ── */}
         <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '20px', marginBottom: '20px' }}>
 
@@ -214,14 +233,22 @@ export default function ProfilePage() {
                 : <p style={{ fontSize: '16px', fontWeight: 600, color: profile.name ? '#e2e8f0' : '#374151' }}>{profile.name || '—'}</p>
               }
             </div>
-            {/* Email — read only */}
+
+            {/* Email — read only, from localStorage */}
             <div>
               <label style={labelStyle}><Mail size={10} style={{ display: 'inline', marginRight: '4px' }} />Email</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <p style={{ fontSize: '14px', color: '#818cf8' }}>{profile.email}</p>
-                <span style={{ fontFamily: MONO, fontSize: '9px', padding: '2px 8px', borderRadius: '999px', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)', color: '#6366f1' }}>from login</span>
+                <p style={{ fontSize: '14px', color: userEmail ? '#818cf8' : '#374151' }}>
+                  {userEmail || '—'}
+                </p>
+                {userEmail && (
+                  <span style={{ fontFamily: MONO, fontSize: '9px', padding: '2px 8px', borderRadius: '999px', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)', color: '#6366f1' }}>
+                    from login
+                  </span>
+                )}
               </div>
             </div>
+
             {/* Phone */}
             <div>
               <label style={labelStyle}><Phone size={10} style={{ display: 'inline', marginRight: '4px' }} />Contact</label>
@@ -230,6 +257,7 @@ export default function ProfilePage() {
                 : <p style={{ fontSize: '14px', color: profile.phone ? '#e2e8f0' : '#374151' }}>{profile.phone || '—'}</p>
               }
             </div>
+
             {/* Location */}
             <div>
               <label style={labelStyle}><MapPin size={10} style={{ display: 'inline', marginRight: '4px' }} />Location</label>
