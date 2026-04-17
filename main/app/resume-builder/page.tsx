@@ -7,7 +7,9 @@ import {
   Plus, Trash2, Download, Eye, EyeOff,
   Briefcase, GraduationCap, Code2, Award, ChevronDown,
   ChevronUp, FileText, Sparkles, Check, ArrowLeft,
-  BookOpen, Zap, Edit2
+  BookOpen, Zap, Edit2,
+  ArrowBigRight,
+  ArrowRight
 } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -317,6 +319,10 @@ export default function ResumeBuilder() {
       setDownloading(false)
     }
   }
+  
+  const skipPage = ()=>{
+    window.location.href = "/resume-ai";
+  }
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -342,6 +348,9 @@ export default function ResumeBuilder() {
             </button>
             <button onClick={handleDownload} disabled={downloading} className="flex items-center gap-2 px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-semibold disabled:opacity-50 transition-colors">
               {downloaded ? <><Check size={14} /> Downloaded!</> : downloading ? <><Sparkles size={14} className="animate-spin" /> Generating…</> : <><Download size={14} /> Download PDF</>}
+            </button>
+            <button onClick={skipPage} className='flex items-center gap-2 px-5 py-1 rounded-lg bg-blue-600 font-semibold hover:bg-blue-500 '>
+              Skip<ArrowRight className=''/>
             </button>
           </div>
         </div>

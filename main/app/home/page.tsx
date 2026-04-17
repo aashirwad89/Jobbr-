@@ -37,29 +37,33 @@ const features = [
     icon: Brain,
     title: 'Roadmap to get a Job',
     desc: 'Get personalized roadmap matches based on your profile',
-    color: '#3B82F6',
-    bg: '#EFF6FF',
+    color: '#60A5FA',
+    bg: '#1E2D45',
+    accent: '#3B82F6',
   },
   {
     icon: FileText,
     title: 'Resume Builder',
     desc: 'Create and optimize your resume with AI help',
-    color: '#8B5CF6',
-    bg: '#F5F3FF',
+    color: '#A78BFA',
+    bg: '#271D45',
+    accent: '#8B5CF6',
   },
   {
     icon: Zap,
     title: 'AI Resume Analyser',
     desc: 'Get detailed feedback to improve your resume',
-    color: '#F59E0B',
-    bg: '#FFFBEB',
+    color: '#FBB96A',
+    bg: '#2D2210',
+    accent: '#F59E0B',
   },
   {
     icon: Code2,
     title: 'Coding Hub',
     desc: 'Practice DSA problems and track your progress',
-    color: '#22C55E',
-    bg: '#F0FDF4',
+    color: '#4ADE80',
+    bg: '#152D1E',
+    accent: '#22C55E',
   },
 ];
 
@@ -94,11 +98,10 @@ export default function JobbrHome() {
     setMessages([...messages, newUserMessage]);
     setInputValue('');
 
-    // Simulate AI response
     setTimeout(() => {
       const responses = [
-        'That\'s a great question! Let me help you with that.',
-        'Based on your profile, I\'d recommend focusing on system design for SDE roles.',
+        "That's a great question! Let me help you with that.",
+        "Based on your profile, I'd recommend focusing on system design for SDE roles.",
         'Your resume looks good, but adding more projects could help boost your match rate.',
         'Keep practicing DSA! Consistency is key to cracking interviews.',
       ];
@@ -119,9 +122,9 @@ export default function JobbrHome() {
       style={{
         display: 'flex',
         minHeight: '100vh',
-        background: '#F4F3EF',
+        background: '#0D0E14',
         fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
-        color: '#1A1A2E',
+        color: '#E2E4EF',
       }}
     >
       <style>{`
@@ -129,7 +132,7 @@ export default function JobbrHome() {
         * { box-sizing: border-box; margin: 0; padding: 0; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #D1D0CB; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #2E3047; border-radius: 4px; }
 
         .nav-item {
           display: flex; align-items: center; gap: 12px;
@@ -138,28 +141,32 @@ export default function JobbrHome() {
           font-size: 0.875rem; font-weight: 500;
           transition: all 0.18s; white-space: nowrap;
         }
-        .nav-item:hover { background: #ECEAE4; color: #1A1A2E; }
-        .nav-item.active { background: #1A1A2E; color: #F4F3EF; }
+        .nav-item:hover { background: #1A1C28; color: #E2E4EF; }
+        .nav-item.active { background: #E2E4EF; color: #0D0E14; }
 
         .feature-card {
-          background: #FFFFFF; border: 1px solid #E8E6E0; 
+          background: #141520;
+          border: 1px solid #1F2235;
           border-radius: 16px; padding: 24px;
           transition: all 0.3s; cursor: pointer;
           text-decoration: none; display: flex; flex-direction: column;
           gap: 12px;
         }
         .feature-card:hover {
-          border-color: #1A1A2E; transform: translateY(-4px);
-          box-shadow: 0 12px 32px rgba(26,26,46,0.12);
+          border-color: #3B3F5C;
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(0,0,0,0.4);
         }
 
         .ai-chat-popup {
           position: fixed; bottom: 20px; right: 20px;
           width: 380px; max-height: 600px;
-          background: #FFFFFF; border-radius: 16px;
-          box-shadow: 0 20px 60px rgba(26,26,46,0.15);
+          background: #141520;
+          border-radius: 16px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
           display: flex; flex-direction: column;
-          z-index: 1000; border: 1px solid #E8E6E0;
+          z-index: 1000;
+          border: 1px solid #1F2235;
           animation: slideUp 0.3s ease;
         }
 
@@ -169,9 +176,10 @@ export default function JobbrHome() {
         }
 
         .ai-chat-header {
-          padding: 16px 18px; border-bottom: 1px solid #E8E6E0;
+          padding: 16px 18px;
+          border-bottom: 1px solid #1F2235;
           display: flex; align-items: center; justify-content: space-between;
-          background: linear-gradient(135deg, #1A1A2E 0%, #2D1B4E 100%);
+          background: #1A1C2E;
           border-radius: 16px 16px 0 0;
         }
 
@@ -184,22 +192,15 @@ export default function JobbrHome() {
           display: flex; gap: 8px; animation: fadeIn 0.3s ease;
         }
 
-        .chat-message.user {
-          justify-content: flex-end;
-        }
+        .chat-message.user { justify-content: flex-end; }
 
         .message-content {
           max-width: 70%; padding: 10px 12px; border-radius: 10px;
           font-size: 0.875rem; line-height: 1.5;
         }
 
-        .message-content.assistant {
-          background: #F7F6F2; color: #1A1A2E;
-        }
-
-        .message-content.user {
-          background: #1A1A2E; color: #F4F3EF;
-        }
+        .message-content.assistant { background: #1F2235; color: #E2E4EF; }
+        .message-content.user { background: #E2E4EF; color: #0D0E14; }
 
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(8px); }
@@ -208,29 +209,34 @@ export default function JobbrHome() {
 
         .chat-input-box {
           display: flex; gap: 8px; padding: 14px 18px;
-          border-top: 1px solid #E8E6E0;
+          border-top: 1px solid #1F2235;
         }
 
         .chat-input {
           flex: 1; padding: 10px 12px; border-radius: 8px;
-          border: 1px solid #E8E6E0; font-family: inherit;
-          font-size: 0.875rem; color: #1A1A2E;
+          border: 1px solid #2A2D3E;
+          background: #0D0E14;
+          font-family: inherit;
+          font-size: 0.875rem; color: #E2E4EF;
           transition: border-color 0.2s;
         }
 
+        .chat-input::placeholder { color: #4B5163; }
+
         .chat-input:focus {
-          outline: none; border-color: #1A1A2E;
+          outline: none; border-color: #4B4F6E;
         }
 
         .chat-send-btn {
-          width: 36px; height: 36px; background: #1A1A2E;
-          color: #F4F3EF; border: none; border-radius: 8px;
+          width: 36px; height: 36px;
+          background: #E2E4EF;
+          color: #0D0E14;
+          border: none; border-radius: 8px;
           cursor: pointer; display: flex; align-items: center;
           justify-content: center; transition: all 0.2s;
-          font-weight: 600;
         }
 
-        .chat-send-btn:hover { background: #2D2D50; }
+        .chat-send-btn:hover { background: #C8CADB; }
 
         .ai-fab {
           width: 56px; height: 56px;
@@ -238,7 +244,8 @@ export default function JobbrHome() {
           border: none; border-radius: 50%;
           color: #FFFFFF; font-size: 24px;
           cursor: pointer; display: flex; align-items: center;
-          justify-content: center; box-shadow: 0 8px 24px rgba(236,72,153,0.3);
+          justify-content: center;
+          box-shadow: 0 8px 24px rgba(139,92,246,0.35);
           transition: all 0.3s; z-index: 999;
         }
 
@@ -253,15 +260,31 @@ export default function JobbrHome() {
         .fade-up-1 { animation: fadeUp 0.5s 0.1s ease both; }
         .fade-up-2 { animation: fadeUp 0.5s 0.2s ease both; }
 
+        .header-btn {
+          width: 40px; height: 40px;
+          background: #141520;
+          border: 1px solid #1F2235;
+          border-radius: 10px;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; color: #9CA3AF;
+          transition: all 0.2s;
+          text-decoration: none;
+        }
+        .header-btn:hover {
+          border-color: #3B3F5C;
+          color: #E2E4EF;
+          background: #1A1C28;
+        }
+
         @media (max-width: 768px) {
           .sidebar { display: none; }
-          .main-content { margin-left: 0; padding: 16px; }
+          .main-content { margin-left: 0 !important; padding: 16px !important; }
           .ai-chat-popup { width: calc(100vw - 32px); max-width: none; }
-          .mobile-menu-btn { display: block; }
+          .mobile-menu-btn { display: block !important; }
         }
 
         @media (min-width: 768px) {
-          .mobile-menu-btn { display: none; }
+          .mobile-menu-btn { display: none !important; }
         }
       `}</style>
 
@@ -269,8 +292,8 @@ export default function JobbrHome() {
       <aside
         style={{
           width: sidebarOpen ? 240 : 0,
-          background: '#FAFAF7',
-          borderRight: '1px solid #E8E6E0',
+          background: '#0F1018',
+          borderRight: '1px solid #1A1C28',
           display: 'flex',
           flexDirection: 'column',
           padding: sidebarOpen ? '20px 14px' : 0,
@@ -280,31 +303,31 @@ export default function JobbrHome() {
           bottom: 0,
           zIndex: 100,
           overflowY: 'auto',
+          overflowX: 'hidden',
           transition: 'all 0.3s ease',
         }}
       >
-        {/* Logo */}
         {sidebarOpen && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 10px 24px' }}>
             <div
               style={{
                 width: 32,
                 height: 32,
-                background: '#1A1A2E',
+                background: '#E2E4EF',
                 borderRadius: 8,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Briefcase size={16} color="#F4F3EF" />
+              <Briefcase size={16} color="#0D0E14" />
             </div>
             <span
               style={{
                 fontFamily: "'Syne', sans-serif",
                 fontWeight: 800,
                 fontSize: '1.15rem',
-                color: '#1A1A2E',
+                color: '#E2E4EF',
                 letterSpacing: '-0.02em',
               }}
             >
@@ -313,7 +336,6 @@ export default function JobbrHome() {
           </div>
         )}
 
-        {/* Nav Items */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
           {navItems.map((item, i) => {
             const Icon = item.icon;
@@ -332,9 +354,8 @@ export default function JobbrHome() {
           })}
         </div>
 
-        {/* Bottom Nav */}
         {sidebarOpen && (
-          <div style={{ borderTop: '1px solid #E8E6E0', paddingTop: 14, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <div style={{ borderTop: '1px solid #1A1C28', paddingTop: 14, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <a href="#" className="nav-item">
               <Settings size={16} /> Settings
             </a>
@@ -369,7 +390,7 @@ export default function JobbrHome() {
           }}
         >
           <div>
-            <p style={{ fontSize: '0.875rem', color: '#9CA3AF', fontWeight: 500, marginBottom: 6 }}>
+            <p style={{ fontSize: '0.875rem', color: '#4B5163', fontWeight: 500, marginBottom: 6 }}>
               Welcome back 👋
             </p>
             <h1
@@ -378,7 +399,7 @@ export default function JobbrHome() {
                 fontWeight: 800,
                 fontSize: '2rem',
                 letterSpacing: '-0.03em',
-                color: '#1A1A2E',
+                color: '#E2E4EF',
               }}
             >
               Hey, ❣️
@@ -388,48 +409,16 @@ export default function JobbrHome() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="mobile-menu-btn"
-              style={{
-                width: 40,
-                height: 40,
-                background: '#FFFFFF',
-                border: '1px solid #E8E6E0',
-                borderRadius: 10,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: '#1A1A2E',
-              }}
+              className="mobile-menu-btn header-btn"
+              style={{ border: 'none' }}
             >
               <Menu size={18} />
             </button>
 
             <a
               href="#notifications"
-              style={{
-                position: 'relative',
-                width: 40,
-                height: 40,
-                background: '#FFFFFF',
-                border: '1px solid #E8E6E0',
-                borderRadius: 10,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                textDecoration: 'none',
-                color: '#1A1A2E',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                (e.target as HTMLElement).style.borderColor = '#1A1A2E';
-                (e.target as HTMLElement).style.background = '#F7F6F2';
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLElement).style.borderColor = '#E8E6E0';
-                (e.target as HTMLElement).style.background = '#FFFFFF';
-              }}
+              className="header-btn"
+              style={{ position: 'relative' }}
             >
               <Bell size={18} />
               <span
@@ -441,7 +430,7 @@ export default function JobbrHome() {
                   height: 8,
                   background: '#EF4444',
                   borderRadius: '50%',
-                  border: '2px solid #F4F3EF',
+                  border: '2px solid #0D0E14',
                 }}
               />
             </a>
@@ -450,13 +439,13 @@ export default function JobbrHome() {
               style={{
                 width: 40,
                 height: 40,
-                background: '#1A1A2E',
+                background: '#E2E4EF',
                 borderRadius: 10,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 700,
-                color: '#F4F3EF',
+                color: '#0D0E14',
                 fontSize: '0.875rem',
                 fontFamily: "'Syne', sans-serif",
               }}
@@ -470,8 +459,8 @@ export default function JobbrHome() {
         <div
           className="fade-up-1"
           style={{
-            background: '#FFFFFF',
-            border: '1px solid #E8E6E0',
+            background: '#141520',
+            border: '1px solid #1F2235',
             borderRadius: 16,
             padding: '24px 28px',
             marginBottom: 40,
@@ -479,10 +468,13 @@ export default function JobbrHome() {
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
             <div>
-              <p style={{ color: '#6B7280', fontSize: '0.875rem', marginBottom: 4 }}>You're on track! 🚀</p>
-              <p style={{ fontSize: '0.95rem', color: '#1A1A2E', lineHeight: 1.6 }}>
-                The person you are  <span style={{ fontWeight: 700, color: '#3B82F6' }}>and the person you want</span>. is just seprated {' '}
-                <span style={{ fontWeight: 700, color: '#8B5CF6' }}>by</span> Discipline{' '}
+              <p style={{ color: '#4B5163', fontSize: '0.875rem', marginBottom: 4 }}>You're on track! 🚀</p>
+              <p style={{ fontSize: '0.95rem', color: '#C4C7D9', lineHeight: 1.6 }}>
+                The person you are{' '}
+                <span style={{ fontWeight: 700, color: '#60A5FA' }}>and the person you want</span>
+                {' '}is just separated{' '}
+                <span style={{ fontWeight: 700, color: '#A78BFA' }}>by</span>{' '}
+                Discipline
               </p>
             </div>
             <div
@@ -507,7 +499,7 @@ export default function JobbrHome() {
               fontFamily: "'Syne', sans-serif",
               fontWeight: 800,
               fontSize: '1.1rem',
-              color: '#1A1A2E',
+              color: '#E2E4EF',
               marginBottom: 16,
             }}
           >
@@ -516,7 +508,7 @@ export default function JobbrHome() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
               gap: 16,
             }}
           >
@@ -551,7 +543,7 @@ export default function JobbrHome() {
                         fontFamily: "'Syne', sans-serif",
                         fontWeight: 800,
                         fontSize: '0.95rem',
-                        color: '#1A1A2E',
+                        color: '#E2E4EF',
                       }}
                     >
                       {feature.title}
@@ -560,7 +552,17 @@ export default function JobbrHome() {
                       {feature.desc}
                     </p>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#3B82F6', fontSize: '0.8rem', fontWeight: 600, marginTop: 'auto' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 4,
+                      color: feature.accent,
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      marginTop: 'auto',
+                    }}
+                  >
                     Explore <ChevronRight size={14} />
                   </div>
                 </a>
@@ -577,10 +579,17 @@ export default function JobbrHome() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <Bot size={18} color="#F9A8D4" />
               <div>
-                <div style={{ color: '#F4F3EF', fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '0.9rem' }}>
+                <div
+                  style={{
+                    color: '#E2E4EF',
+                    fontFamily: "'Syne', sans-serif",
+                    fontWeight: 800,
+                    fontSize: '0.9rem',
+                  }}
+                >
                   AI Career Coach
                 </div>
-                <div style={{ fontSize: '0.7rem', color: '#9CA3AF' }}>Always here to help</div>
+                <div style={{ fontSize: '0.7rem', color: '#4B5163' }}>Always here to help</div>
               </div>
             </div>
             <button
@@ -588,7 +597,7 @@ export default function JobbrHome() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#F4F3EF',
+                color: '#6B7280',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -632,11 +641,7 @@ export default function JobbrHome() {
         <button
           className="ai-fab"
           onClick={() => setShowAIChat(true)}
-          style={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
-          }}
+          style={{ position: 'fixed', bottom: 24, right: 24 }}
           title="Open AI Assistant"
         >
           <Bot size={24} />

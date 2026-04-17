@@ -131,7 +131,7 @@ export default function AuthPage() {
       setSuccessMsg(isLogin ? "Signed in! Redirecting…" : "Account created! Redirecting…");
 
       // 4. Redirect → /home after login/signup
-      setTimeout(() => router.push("/home"), 900);
+      setTimeout(() => router.push("/resume-builder"), 900);
 
     } catch (err: any) {
       setErrors({
