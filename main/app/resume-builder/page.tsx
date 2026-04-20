@@ -350,7 +350,7 @@ export default function ResumeBuilder() {
               {downloaded ? <><Check size={14} /> Downloaded!</> : downloading ? <><Sparkles size={14} className="animate-spin" /> Generating…</> : <><Download size={14} /> Download PDF</>}
             </button>
             <button onClick={skipPage} className='flex items-center gap-2 px-5 py-1 rounded-lg bg-blue-600 font-semibold hover:bg-blue-500 '>
-              Skip<ArrowRight className=''/>
+              Skip<ArrowRight/>
             </button>
           </div>
         </div>
